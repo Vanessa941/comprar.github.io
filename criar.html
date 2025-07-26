@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Anúncio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Novo Anúncio</h1>
+    <input type="text" id="titulo" placeholder="Título do anúncio">
+    <textarea id="descricao" placeholder="Descrição do anúncio"></textarea>
+    <input type="text" id="imagem" placeholder="URL da imagem">
+    <button onclick="publicar()">Publicar</button>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    function publicar() {
+      const titulo = document.getElementById('titulo').value;
+      const descricao = document.getElementById('descricao').value;
+      const imagem = document.getElementById('imagem').value;
+      const usuario = auth.currentUser?.email || 'Anônimo';
+      db.collection("anuncios").add({ titulo, descricao, imagem, usuario })
+        .then(() => alert("Anúncio publicado!") || window.location.href = 'home.html')
+        .catch(e => alert("Erro: " + e.message));
+    }
+  </script>
+</body>
+</html>
